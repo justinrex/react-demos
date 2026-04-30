@@ -14,6 +14,12 @@ Shared project notes for `react-demos`.
 
 ## Recent changes
 
+- Updated the app shell to better match the demos:
+  - route pages now lazy load
+  - nav links preload page code on hover/focus intent
+  - the shell now includes a skip link, stronger nav semantics, and clearer sidebar structure
+  - shared styles now use more root-level tokens and explicit focus-visible treatment
+  - follow-up shell cleanup fixed the sidebar nav card layout after removing link descriptions
 - Added `/effects` with demos for:
   - derived state vs render-time derivation
   - stale async closures

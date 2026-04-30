@@ -4,17 +4,35 @@ import { demoPages } from "./routes";
 export function Shell() {
   return (
     <div className="app-shell">
+      <a className="skip-link" href="#main-content">
+        Skip to content
+      </a>
       <aside className="sidebar">
-        <p className="eyebrow">React Demos</p>
+        <header className="sidebar-header">
+          <p className="eyebrow">React Demos</p>
+        </header>
         <nav className="nav-list" aria-label="Demo pages">
-          {demoPages.map((page) => (
-            <NavLink key={page.slug} to={`/${page.slug}`} className={getNavClassName}>
-              {page.title}
-            </NavLink>
-          ))}
+          <ul className="nav-items">
+            {demoPages.map((page) => (
+              <li key={page.slug}>
+                <NavLink
+                  to={`/${page.slug}`}
+                  className={getNavClassName}
+                  onMouseEnter={() => {
+                    void page.preload();
+                  }}
+                  onFocus={() => {
+                    void page.preload();
+                  }}
+                >
+                  <span className="nav-link-title">{page.title}</span>
+                </NavLink>
+              </li>
+            ))}
+          </ul>
         </nav>
       </aside>
-      <main className="content">
+      <main className="content" id="main-content" tabIndex={-1}>
         <Outlet />
       </main>
     </div>
