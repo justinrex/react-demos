@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { PageIntro } from "../components/PageIntro";
 
 const phases = ["idle", "loading", "success"] as const;
 
@@ -8,10 +9,11 @@ export function StateDemoPage() {
 
   return (
     <section className="page">
-      <div className="page-header">
-        <p className="eyebrow">State Demo</p>
-        <h2>Cycle through simple UI states on one dedicated page.</h2>
-      </div>
+      <PageIntro
+        eyebrow="State Demo"
+        title="Cycle through simple UI states on one dedicated page."
+        subtitle="Keep this page for testing state transitions, loading flows, and small interaction sequences in isolation."
+      />
 
       <div className="state-panel">
         <p className="state-label">Current state</p>

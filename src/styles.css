@@ -51,15 +51,13 @@ code {
   backdrop-filter: blur(20px);
 }
 
-.sidebar h1,
 .page h2 {
   margin: 0;
   font-size: clamp(2rem, 4vw, 3.2rem);
   line-height: 1;
 }
 
-.sidebar-copy,
-.hero-copy,
+.page-intro-copy,
 .demo-description {
   color: rgba(247, 244, 236, 0.76);
 }
@@ -104,13 +102,19 @@ code {
   gap: 1.5rem;
 }
 
-.hero-card,
+.page-intro,
 .demo-card,
 .state-panel {
   padding: 1.5rem;
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 1.5rem;
   background: rgba(255, 255, 255, 0.04);
+}
+
+.page-intro {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
 }
 
 .demo-grid {
@@ -126,7 +130,8 @@ code {
 }
 
 .demo-link,
-.primary-button {
+.primary-button,
+.secondary-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -140,10 +145,10 @@ code {
   cursor: pointer;
 }
 
-.page-header {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+.secondary-button {
+  border: 1px solid rgba(226, 184, 106, 0.45);
+  background: rgba(226, 184, 106, 0.12);
+  color: #f7f4ec;
 }
 
 .control-row {
@@ -196,6 +201,106 @@ code {
   color: rgba(247, 244, 236, 0.72);
 }
 
+.guide-grid,
+.comparison-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+.guide-stack {
+  display: grid;
+  gap: 1rem;
+}
+
+.guide-card,
+.callout-card,
+.demo-section,
+.comparison-card,
+.memo-child-card {
+  padding: 1.5rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1.5rem;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.callout-card,
+.demo-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.demo-section-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.demo-section h3,
+.guide-card h3,
+.comparison-card h4,
+.memo-child-card h4 {
+  margin: 0;
+}
+
+.demo-kicker {
+  margin: 0 0 0.4rem;
+  color: #e2b86a;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.72rem;
+}
+
+.demo-copy,
+.guidance-list {
+  margin: 0;
+  color: rgba(247, 244, 236, 0.78);
+}
+
+.guidance-list {
+  padding-left: 1.2rem;
+}
+
+.guidance-list-numbered {
+  list-style: decimal;
+}
+
+.guidance-list li + li {
+  margin-top: 0.55rem;
+}
+
+.stats-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.stat-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  color: rgba(247, 244, 236, 0.86);
+  font-size: 0.9rem;
+}
+
+.demo-summary {
+  margin: 0;
+  color: #f7f4ec;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.memo-child-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
 @media (max-width: 900px) {
   .app-shell {
     grid-template-columns: 1fr;
@@ -204,5 +309,9 @@ code {
   .sidebar {
     border-right: 0;
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  .demo-section-header {
+    flex-direction: column;
   }
 }

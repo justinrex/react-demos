@@ -1,14 +1,14 @@
 import { Shell } from "./shell";
-import { HomePage } from "./pages/HomePage";
-import { MemoDemoPage } from "./pages/MemoDemoPage";
+import { Navigate } from "react-router-dom";
+import { MemoizationPage } from "./pages/MemoizationPage";
 import { StateDemoPage } from "./pages/StateDemoPage";
 
 export const demoPages = [
   {
-    slug: "memo-demo",
-    title: "Memo Demo",
-    description: "Shows how local state and derived lists behave during re-renders.",
-    element: <MemoDemoPage />
+    slug: "memoization",
+    title: "Memoization",
+    description: "Explore when memoization improves render behavior and when it adds unnecessary complexity.",
+    element: <MemoizationPage />
   },
   {
     slug: "state-demo",
@@ -25,7 +25,7 @@ export const routes = [
     children: [
       {
         index: true,
-        element: <HomePage />
+        element: <Navigate to="/memoization" replace />
       },
       ...demoPages.map((page) => ({
         path: page.slug,

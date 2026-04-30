@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import { RouterProvider, createMemoryRouter } from "react-router-dom";
 import { routes } from "./routes";
 
-it("renders the overview page", () => {
+it("redirects the root route to the first demo page", async () => {
   const router = createMemoryRouter(routes, {
     initialEntries: ["/"]
   });
@@ -10,6 +10,8 @@ it("renders the overview page", () => {
   render(<RouterProvider router={router} />);
 
   expect(
-    screen.getByRole("heading", { name: /build one-off experiments/i }),
+    await screen.findByRole("heading", {
+      name: /understanding when to memoize and when not to/i
+    }),
   ).toBeInTheDocument();
 });

@@ -6,15 +6,7 @@ export function Shell() {
     <div className="app-shell">
       <aside className="sidebar">
         <p className="eyebrow">React Demos</p>
-        <h1>Single app, separate pages.</h1>
-        <p className="sidebar-copy">
-          Each demo lives on its own route so you can keep experiments isolated
-          without splitting the repo.
-        </p>
         <nav className="nav-list" aria-label="Demo pages">
-          <NavLink to="/" end className={getNavClassName}>
-            Overview
-          </NavLink>
           {demoPages.map((page) => (
             <NavLink key={page.slug} to={`/${page.slug}`} className={getNavClassName}>
               {page.title}
