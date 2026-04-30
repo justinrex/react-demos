@@ -1,5 +1,9 @@
 import { useId, useState } from "react";
 import { PageIntro } from "../components/PageIntro";
+import { LessonHero } from "../components/LessonHero";
+import { GuidanceGrid } from "../components/GuidanceGrid";
+import { RuleCallout } from "../components/RuleCallout";
+import { DemoSectionHeader } from "../components/DemoSectionHeader";
 
 export function AccessibilitySemanticsPage() {
   return (
@@ -10,70 +14,54 @@ export function AccessibilitySemanticsPage() {
         subtitle="This page focuses on a practical rule: the right native element usually gives you keyboard behavior, roles, naming, and structure for free. ARIA is most useful after that baseline is already correct."
       />
 
-      <section className="a11y-hero" aria-label="Accessibility mental model">
-        <div className="a11y-hero-copy">
-          <p className="demo-kicker">Mental model</p>
-          <h3>Start with the element that already means what you want.</h3>
-          <p className="demo-copy">
+      <LessonHero
+        ariaLabel="Accessibility mental model"
+        tone="a11y"
+        title="Start with the element that already means what you want."
+        copy={
+          <>
             Buttons should usually be buttons. Navigation should usually live in
             <code> nav </code>. Form controls need labels. Headings should
             outline the page. Most accessibility work gets easier when the HTML
             is doing the first half of the job.
-          </p>
-        </div>
+          </>
+        }
+        prompts={[
+          {
+            label: "Use native HTML for",
+            value: "roles, keyboard behavior, names, and structure",
+          },
+          {
+            label: "Use ARIA for",
+            value: "the missing semantics native HTML cannot express alone",
+          },
+          {
+            label: "Avoid",
+            value: "rebuilding buttons, links, headings, and labels from generic divs",
+          },
+        ]}
+      />
 
-        <div className="a11y-hero-grid">
-          <article className="a11y-hero-prompt">
-            <p className="effects-prompt-label">Use native HTML for</p>
-            <p className="effects-prompt-value">
-              roles, keyboard behavior, names, and structure
-            </p>
-          </article>
-          <article className="a11y-hero-prompt">
-            <p className="effects-prompt-label">Use ARIA for</p>
-            <p className="effects-prompt-value">
-              the missing semantics native HTML cannot express alone
-            </p>
-          </article>
-          <article className="a11y-hero-prompt">
-            <p className="effects-prompt-label">Avoid</p>
-            <p className="effects-prompt-value">
-              rebuilding buttons, links, headings, and labels from generic divs
-            </p>
-          </article>
-        </div>
-      </section>
-
-      <section className="guide-grid" aria-label="Accessibility guidance">
-        <article className="guide-card">
-          <p className="demo-kicker">Question 1</p>
-          <h3>Does this interaction already have a native element?</h3>
-          <p className="demo-copy">
-            If it does, use that first. A native button or link usually beats a
-            clickable <code>div</code> plus patches for role, tab index, and key
-            handling.
-          </p>
-        </article>
-
-        <article className="guide-card">
-          <p className="demo-kicker">Question 2</p>
-          <h3>Will a screen reader understand the structure without visual cues?</h3>
-          <p className="demo-copy">
-            Landmarks, headings, lists, tables, labels, and fieldsets help
-            non-visual users build the same mental map sighted users get from
-            layout and typography.
-          </p>
-        </article>
-
-        <article className="guide-card">
-          <p className="demo-kicker">Question 3</p>
-          <h3>Are we adding ARIA because native HTML was ignored?</h3>
-          <p className="demo-copy">
-            ARIA should usually clarify or supplement. If it is replacing a
-            simpler native pattern, that is often a smell rather than a win.
-          </p>
-        </article>
-      </section>
+      <GuidanceGrid
+        ariaLabel="Accessibility guidance"
+        items={[
+          {
+            question: "Does this interaction already have a native element?",
+            answer:
+              "If it does, use that first. A native button or link usually beats a clickable div plus patches for role, tab index, and key handling.",
+          },
+          {
+            question: "Will a screen reader understand the structure without visual cues?",
+            answer:
+              "Landmarks, headings, lists, tables, labels, and fieldsets help non-visual users build the same mental map sighted users get from layout and typography.",
+          },
+          {
+            question: "Are we adding ARIA because native HTML was ignored?",
+            answer:
+              "ARIA should usually clarify or supplement. If it is replacing a simpler native pattern, that is often a smell rather than a win.",
+          },
+        ]}
+      />
 
       <LandmarksDemo />
       <ControlsDemo />
@@ -81,17 +69,16 @@ export function AccessibilitySemanticsPage() {
       <FormsDemo />
       <ContentStructureDemo />
 
-      <section className="callout-card">
-        <p className="demo-kicker">Rule of thumb</p>
-        <h3>No ARIA beats bad ARIA. Good HTML beats both.</h3>
-        <ul className="guidance-list">
-          <li>Use the correct native element before adding custom roles or key handling.</li>
-          <li>If it performs an in-page action, use a button even when the design wants link styling.</li>
-          <li>Give form controls persistent labels and connect errors to the field they describe.</li>
-          <li>Use the most specific text element that matches the content: paragraph, heading, list item, label, caption, and so on.</li>
-          <li>Reach for ARIA when native HTML cannot express the state, relationship, or live update you need.</li>
-        </ul>
-      </section>
+      <RuleCallout
+        title="No ARIA beats bad ARIA. Good HTML beats both."
+        bullets={[
+          "Use the correct native element before adding custom roles or key handling.",
+          "If it performs an in-page action, use a button even when the design wants link styling.",
+          "Give form controls persistent labels and connect errors to the field they describe.",
+          "Use the most specific text element that matches the content: paragraph, heading, list item, label, caption, and so on.",
+          "Reach for ARIA when native HTML cannot express the state, relationship, or live update you need.",
+        ]}
+      />
     </section>
   );
 }
@@ -99,16 +86,11 @@ export function AccessibilitySemanticsPage() {
 function LandmarksDemo() {
   return (
     <section className="demo-section a11y-demo-section">
-      <div className="demo-section-header">
-        <div>
-          <p className="demo-kicker">Example 1</p>
-          <h3>Landmarks and headings give a page navigable structure.</h3>
-          <p className="demo-copy demo-section-note">
-            Visual grouping is not enough. Screen reader users benefit when the
-            document has clear landmark regions and a heading outline.
-          </p>
-        </div>
-      </div>
+      <DemoSectionHeader
+        eyebrow="Example 1"
+        title="Landmarks and headings give a page navigable structure."
+        note="Visual grouping is not enough. Screen reader users benefit when the document has clear landmark regions and a heading outline."
+      />
 
       <div className="comparison-grid">
         <article className="comparison-card comparison-card-caution">
@@ -160,17 +142,12 @@ function ControlsDemo() {
 
   return (
     <section className="demo-section a11y-demo-section">
-      <div className="demo-section-header">
-        <div>
-          <p className="demo-kicker">Example 2</p>
-          <h3>Interactive controls should usually be buttons or links, not patched divs.</h3>
-          <p className="demo-copy demo-section-note">
-            Native elements come with focus behavior, keyboard support, naming,
-            and assistive semantics that generic containers do not.
-          </p>
-        </div>
-        <span className="stat-chip">count: {count}</span>
-      </div>
+      <DemoSectionHeader
+        eyebrow="Example 2"
+        title="Interactive controls should usually be buttons or links, not patched divs."
+        note="Native elements come with focus behavior, keyboard support, naming, and assistive semantics that generic containers do not."
+        aside={<span className="stat-chip">count: {count}</span>}
+      />
 
       <div className="comparison-grid">
         <article className="comparison-card comparison-card-caution">
@@ -215,18 +192,20 @@ function LinkLookingButtonDemo() {
 
   return (
     <section className="demo-section a11y-demo-section">
-      <div className="demo-section-header">
-        <div>
-          <p className="demo-kicker">Example 3</p>
-          <h3>Semantics follow behavior, not visual styling.</h3>
-          <p className="demo-copy demo-section-note">
+      <DemoSectionHeader
+        eyebrow="Example 3"
+        title="Semantics follow behavior, not visual styling."
+        note={
+          <>
             If the control opens a panel, toggles UI, or triggers an in-page
             action, it should usually be a <code>button</code> even if design
             wants it to look like a link.
-          </p>
-        </div>
-        <span className="stat-chip">details: {isOpen ? "open" : "closed"}</span>
-      </div>
+          </>
+        }
+        aside={
+          <span className="stat-chip">details: {isOpen ? "open" : "closed"}</span>
+        }
+      />
 
       <div className="comparison-grid">
         <article className="comparison-card comparison-card-caution">
@@ -285,17 +264,11 @@ function FormsDemo() {
 
   return (
     <section className="demo-section a11y-demo-section">
-      <div className="demo-section-header">
-        <div>
-          <p className="demo-kicker">Example 4</p>
-          <h3>Accessible forms need real labels, grouping, and connected errors.</h3>
-          <p className="demo-copy demo-section-note">
-            Placeholder-only forms disappear as soon as users type. Labels,
-            fieldsets, legends, and described-by connections keep the form
-            understandable through assistive tech and memory.
-          </p>
-        </div>
-      </div>
+      <DemoSectionHeader
+        eyebrow="Example 4"
+        title="Accessible forms need real labels, grouping, and connected errors."
+        note="Placeholder-only forms disappear as soon as users type. Labels, fieldsets, legends, and described-by connections keep the form understandable through assistive tech and memory."
+      />
 
       <div className="comparison-grid">
         <article className="comparison-card comparison-card-caution">
@@ -375,19 +348,11 @@ function FormsDemo() {
 function ContentStructureDemo() {
   return (
     <section className="demo-section a11y-demo-section">
-      <div className="demo-section-header">
-        <div>
-          <p className="demo-kicker">Example 5</p>
-          <h3>Use lists, articles, and tables when the content actually is one.</h3>
-          <p className="demo-copy demo-section-note">
-            CSS can make anything look like cards or rows, but assistive tech
-            still benefits when the underlying HTML reflects the data model.
-            The same rule applies to text: use paragraphs for paragraphs,
-            headings for headings, and labels or captions when those are the
-            real roles.
-          </p>
-        </div>
-      </div>
+      <DemoSectionHeader
+        eyebrow="Example 5"
+        title="Use lists, articles, and tables when the content actually is one."
+        note="CSS can make anything look like cards or rows, but assistive tech still benefits when the underlying HTML reflects the data model. The same rule applies to text: use paragraphs for paragraphs, headings for headings, and labels or captions when those are the real roles."
+      />
 
       <div className="comparison-grid">
         <article className="comparison-card comparison-card-caution">

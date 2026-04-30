@@ -1,5 +1,9 @@
 import { useState } from "react";
 import { PageIntro } from "../components/PageIntro";
+import { LessonHero } from "../components/LessonHero";
+import { GuidanceGrid } from "../components/GuidanceGrid";
+import { RuleCallout } from "../components/RuleCallout";
+import { ComparisonCardHeader } from "../components/ComparisonCardHeader";
 
 const swatches = [
   { label: "Canvas", token: "--theme-surface" },
@@ -19,64 +23,47 @@ export function CssFoundationsPage() {
         subtitle="This page takes a more opinionated stance: px is a valid default for boxes, rem is an app-wide scaling choice, em is a narrow local tool, and variables/themes matter no matter which unit system you pick."
       />
 
-      <section className="css-hero" aria-label="CSS mental model">
-        <div className="css-hero-copy">
-          <p className="demo-kicker">Mental model</p>
-          <h3>Separate sizing philosophy from token and theme design.</h3>
-          <p className="demo-copy">
-            First decide whether boxes should stay mostly fixed or scale with
-            user font settings. Then express repeated design values as tokens,
-            and let themes remap those semantic roles without rewriting
-            component CSS.
-          </p>
-        </div>
+      <LessonHero
+        ariaLabel="CSS mental model"
+        tone="css"
+        title="Separate sizing philosophy from token and theme design."
+        copy="First decide whether boxes should stay mostly fixed or scale with user font settings. Then express repeated design values as tokens, and let themes remap those semantic roles without rewriting component CSS."
+        prompts={[
+          {
+            label: "Default sizing stance",
+            value: "Use px for predictable box metrics unless you want root-size scaling",
+          },
+          {
+            label: "Use `rem` for",
+            value: "A deliberate layout system that scales with root font size",
+          },
+          {
+            label: "Use `em` for",
+            value: "Rare cases where the box should follow local text size",
+          },
+        ]}
+      />
 
-        <div className="css-hero-grid">
-          <article className="css-hero-prompt">
-            <p className="effects-prompt-label">Default sizing stance</p>
-            <p className="effects-prompt-value">Use px for predictable box metrics unless you want root-size scaling</p>
-          </article>
-          <article className="css-hero-prompt">
-            <p className="effects-prompt-label">Use `rem` for</p>
-            <p className="effects-prompt-value">A deliberate layout system that scales with root font size</p>
-          </article>
-          <article className="css-hero-prompt">
-            <p className="effects-prompt-label">Use `em` for</p>
-            <p className="effects-prompt-value">Rare cases where the box should follow local text size</p>
-          </article>
-        </div>
-      </section>
-
-      <section className="guide-grid" aria-label="CSS guidance">
-        <article className="guide-card">
-          <p className="demo-kicker">Question 1</p>
-          <h3>Do we want boxes to scale with user font settings at all?</h3>
-          <p className="demo-copy">
-            If the answer is no, fixed units are usually the clearer default. If
-            the answer is yes, then <code>rem</code> should be treated as a
-            system choice, not sprinkled in randomly.
-          </p>
-        </article>
-
-        <article className="guide-card">
-          <p className="demo-kicker">Question 2</p>
-          <h3>Will this value repeat across components?</h3>
-          <p className="demo-copy">
-            If a color, radius, space, or shadow shows up more than once, it is
-            usually a token candidate instead of a literal value.
-          </p>
-        </article>
-
-        <article className="guide-card">
-          <p className="demo-kicker">Question 3</p>
-          <h3>Are we willing to test multiple root font sizes?</h3>
-          <p className="demo-copy">
-            If not, do not pretend you have a `rem`-driven layout system.
-            Choose a mostly fixed sizing approach and test large-text cases more
-            directly for overflow and wrapping.
-          </p>
-        </article>
-      </section>
+      <GuidanceGrid
+        ariaLabel="CSS guidance"
+        items={[
+          {
+            question: "Do we want boxes to scale with user font settings at all?",
+            answer:
+              "If the answer is no, fixed units are usually the clearer default. If the answer is yes, then rem should be treated as a system choice, not sprinkled in randomly.",
+          },
+          {
+            question: "Will this value repeat across components?",
+            answer:
+              "If a color, radius, space, or shadow shows up more than once, it is usually a token candidate instead of a literal value.",
+          },
+          {
+            question: "Are we willing to test multiple root font sizes?",
+            answer:
+              "If not, do not pretend you have a rem-driven layout system. Choose a mostly fixed sizing approach and test large-text cases more directly for overflow and wrapping.",
+          },
+        ]}
+      />
 
       <SizingSystemDemo />
       <RemVsEmDemo />
@@ -87,18 +74,26 @@ export function CssFoundationsPage() {
       <CascadeDemo />
       <ResponsiveTokensDemo />
 
-      <section className="callout-card">
-        <p className="demo-kicker">Rule of thumb</p>
-        <h3>Use px by default for boxes. Use rem only if you mean it systemically.</h3>
-        <ul className="guidance-list">
-          <li><code>px</code> is a valid practical default for padding, gaps, radii, borders, icons, and structural dimensions.</li>
-          <li><code>rem</code> is strongest when typography and layout rhythm intentionally scale together across the app.</li>
-          <li><code>em</code> is useful for text-bound components, but easy to misuse for general layout.</li>
-          <li>CSS variables are strongest when they represent semantic roles, not arbitrary one-off values.</li>
-          <li>Theme consumption should happen through a small token surface instead of hardcoded hex values.</li>
-          <li>Prefer changing tokens at a boundary over escalating selector specificity inside components.</li>
-        </ul>
-      </section>
+      <RuleCallout
+        title="Use px by default for boxes. Use rem only if you mean it systemically."
+        bullets={[
+          <>
+            <code>px</code> is a valid practical default for padding, gaps,
+            radii, borders, icons, and structural dimensions.
+          </>,
+          <>
+            <code>rem</code> is strongest when typography and layout rhythm
+            intentionally scale together across the app.
+          </>,
+          <>
+            <code>em</code> is useful for text-bound components, but easy to
+            misuse for general layout.
+          </>,
+          "CSS variables are strongest when they represent semantic roles, not arbitrary one-off values.",
+          "Theme consumption should happen through a small token surface instead of hardcoded hex values.",
+          "Prefer changing tokens at a boundary over escalating selector specificity inside components.",
+        ]}
+      />
     </section>
   );
 }
@@ -297,10 +292,11 @@ function VariablesDemo() {
 
       <div className="comparison-grid">
         <article className="comparison-card comparison-card-caution">
-          <div>
-            <p className="comparison-label comparison-label-caution">Hardcoded</p>
-            <h4>Repeated literal values</h4>
-          </div>
+          <ComparisonCardHeader
+            label="Hardcoded"
+            tone="caution"
+            title="Repeated literal values"
+          />
           <p className="demo-copy">
             Hardcoding the same accent into border, text, hover, and badge
             styles makes updates scattered and easier to miss.
@@ -318,13 +314,12 @@ function VariablesDemo() {
           className="comparison-card comparison-card-success css-variable-card"
           style={{ ["--panel-accent" as string]: accent }}
         >
-          <div className="demo-section-header">
-            <div>
-              <p className="comparison-label comparison-label-success">Tokenized</p>
-              <h4>One variable, many consumers</h4>
-            </div>
-            <span className="css-token-badge">var(--panel-accent)</span>
-          </div>
+          <ComparisonCardHeader
+            label="Tokenized"
+            tone="success"
+            title="One variable, many consumers"
+            aside={<span className="css-token-badge">var(--panel-accent)</span>}
+          />
           <p className="demo-copy">
             Update the token once and the whole component responds without
             repeating the same value through multiple rules.
@@ -370,10 +365,11 @@ function ThemeDemo() {
 
       <div className="comparison-grid">
         <article className="comparison-card comparison-card-caution">
-          <div>
-            <p className="comparison-label comparison-label-caution">Fragile</p>
-            <h4>Raw color consumption</h4>
-          </div>
+          <ComparisonCardHeader
+            label="Fragile"
+            tone="caution"
+            title="Raw color consumption"
+          />
           <p className="demo-copy">
             Components that directly ask for `#1b2a41` or `#d8a04a` are coupled
             to one palette and harder to restyle globally.
@@ -381,13 +377,12 @@ function ThemeDemo() {
         </article>
 
         <article className={`comparison-card comparison-card-success theme-card theme-${theme}`}>
-          <div className="demo-section-header">
-            <div>
-              <p className="comparison-label comparison-label-success">Semantic tokens</p>
-              <h4>Theme consumer card</h4>
-            </div>
-            <span className="css-token-badge">surface / text / accent</span>
-          </div>
+          <ComparisonCardHeader
+            label="Semantic tokens"
+            tone="success"
+            title="Theme consumer card"
+            aside={<span className="css-token-badge">surface / text / accent</span>}
+          />
           <p className="demo-copy">
             This card consumes role-based variables, so swapping the theme just
             remaps those roles.

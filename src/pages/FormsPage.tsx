@@ -1,5 +1,9 @@
 import { FormEvent, useId, useRef, useState } from "react";
 import { PageIntro } from "../components/PageIntro";
+import { LessonHero } from "../components/LessonHero";
+import { GuidanceGrid } from "../components/GuidanceGrid";
+import { RuleCallout } from "../components/RuleCallout";
+import { DemoSectionHeader } from "../components/DemoSectionHeader";
 
 type ValidationMode = "change" | "blur" | "submit";
 
@@ -12,84 +16,62 @@ export function FormsPage() {
         subtitle="This page treats forms as data flow plus feedback: when controlled fields help, when uncontrolled fields are enough, when validation should run, and how submit state changes the design."
       />
 
-      <section className="forms-hero" aria-label="Forms mental model">
-        <div className="forms-hero-copy">
-          <p className="demo-kicker">Mental model</p>
-          <h3>Do not default to controlled fields unless the UI needs to react continuously.</h3>
-          <p className="demo-copy">
-            Some forms only need values at submit time. Others need live
-            formatting, derived state, cross-field rules, or instant feedback.
-            Start with the UX requirement, then choose the data flow.
-          </p>
-        </div>
+      <LessonHero
+        ariaLabel="Forms mental model"
+        tone="forms"
+        title="Do not default to controlled fields unless the UI needs to react continuously."
+        copy="Some forms only need values at submit time. Others need live formatting, derived state, cross-field rules, or instant feedback. Start with the UX requirement, then choose the data flow."
+        prompts={[
+          {
+            label: "Controlled fits",
+            value: "live validation, derived UI, dependent fields, formatting",
+          },
+          {
+            label: "Uncontrolled fits",
+            value: "simple submit-driven forms with low ceremony",
+          },
+          {
+            label: "Always design for",
+            value: "validation timing, pending state, and error recovery",
+          },
+        ]}
+      />
 
-        <div className="forms-hero-grid">
-          <article className="forms-hero-prompt">
-            <p className="effects-prompt-label">Controlled fits</p>
-            <p className="effects-prompt-value">
-              live validation, derived UI, dependent fields, formatting
-            </p>
-          </article>
-          <article className="forms-hero-prompt">
-            <p className="effects-prompt-label">Uncontrolled fits</p>
-            <p className="effects-prompt-value">
-              simple submit-driven forms with low ceremony
-            </p>
-          </article>
-          <article className="forms-hero-prompt">
-            <p className="effects-prompt-label">Always design for</p>
-            <p className="effects-prompt-value">
-              validation timing, pending state, and error recovery
-            </p>
-          </article>
-        </div>
-      </section>
-
-      <section className="guide-grid" aria-label="Forms guidance">
-        <article className="guide-card">
-          <p className="demo-kicker">Question 1</p>
-          <h3>Does the UI need the value before submit?</h3>
-          <p className="demo-copy">
-            If not, uncontrolled fields can be simpler and perfectly valid. If
-            the UI reacts on every edit, controlled state often earns its cost.
-          </p>
-        </article>
-
-        <article className="guide-card">
-          <p className="demo-kicker">Question 2</p>
-          <h3>When should the user see validation feedback?</h3>
-          <p className="demo-copy">
-            On-change, on-blur, and on-submit validation each produce a
-            different experience. The goal is not “earliest possible,” but
-            “clearest without being noisy.”
-          </p>
-        </article>
-
-        <article className="guide-card">
-          <p className="demo-kicker">Question 3</p>
-          <h3>What happens while the form is submitting?</h3>
-          <p className="demo-copy">
-            Pending state, field errors, retry flow, and success handling are
-            part of the form architecture. They are not afterthought details.
-          </p>
-        </article>
-      </section>
+      <GuidanceGrid
+        ariaLabel="Forms guidance"
+        items={[
+          {
+            question: "Does the UI need the value before submit?",
+            answer:
+              "If not, uncontrolled fields can be simpler and perfectly valid. If the UI reacts on every edit, controlled state often earns its cost.",
+          },
+          {
+            question: "When should the user see validation feedback?",
+            answer:
+              "On-change, on-blur, and on-submit validation each produce a different experience. The goal is not “earliest possible,” but “clearest without being noisy.”",
+          },
+          {
+            question: "What happens while the form is submitting?",
+            answer:
+              "Pending state, field errors, retry flow, and success handling are part of the form architecture. They are not afterthought details.",
+          },
+        ]}
+      />
 
       <ControlledVsUncontrolledDemo />
       <LiveSignupDemo />
       <ValidationTimingDemo />
       <SubmitStateDemo />
 
-      <section className="callout-card">
-        <p className="demo-kicker">Rule of thumb</p>
-        <h3>Use the least form machinery that still supports the intended UX.</h3>
-        <ul className="guidance-list">
-          <li>Use uncontrolled fields for simple submit-time collection.</li>
-          <li>Use controlled fields when the UI reacts as the user types.</li>
-          <li>Choose validation timing deliberately instead of validating everything immediately.</li>
-          <li>Preserve input on error and make submit state visible.</li>
-        </ul>
-      </section>
+      <RuleCallout
+        title="Use the least form machinery that still supports the intended UX."
+        bullets={[
+          "Use uncontrolled fields for simple submit-time collection.",
+          "Use controlled fields when the UI reacts as the user types.",
+          "Choose validation timing deliberately instead of validating everything immediately.",
+          "Preserve input on error and make submit state visible.",
+        ]}
+      />
     </section>
   );
 }
@@ -103,18 +85,16 @@ function ControlledVsUncontrolledDemo() {
 
   return (
     <section className="demo-section forms-demo-section">
-      <div className="demo-section-header">
-        <div>
-          <p className="demo-kicker">Example 1</p>
-          <h3>Controlled vs uncontrolled depends on when React needs the value.</h3>
-          <p className="demo-copy demo-section-note">
-            The search form only reads the input on submit. The filter chip UI
-            reacts immediately to the current value, so it benefits from a
-            controlled field.
-          </p>
-        </div>
-        <span className="stat-chip">controlled renders: {renderCount.current}</span>
-      </div>
+      <DemoSectionHeader
+        eyebrow="Example 1"
+        title="Controlled vs uncontrolled depends on when React needs the value."
+        note="The search form only reads the input on submit. The filter chip UI reacts immediately to the current value, so it benefits from a controlled field."
+        aside={
+          <span className="stat-chip">
+            controlled renders: {renderCount.current}
+          </span>
+        }
+      />
 
       <div className="comparison-grid">
         <article className="comparison-card comparison-card-success">
@@ -177,18 +157,16 @@ function LiveSignupDemo() {
 
   return (
     <section className="demo-section forms-demo-section">
-      <div className="demo-section-header">
-        <div>
-          <p className="demo-kicker">Example 2</p>
-          <h3>Controlled state earns its keep when the form drives live feedback.</h3>
-          <p className="demo-copy demo-section-note">
-            Inline feedback, derived submit state, and password guidance all
-            depend on the current draft values. This is where controlled inputs
-            are usually worth it.
-          </p>
-        </div>
-        <span className="stat-chip">submit: {canSubmit ? "enabled" : "blocked"}</span>
-      </div>
+      <DemoSectionHeader
+        eyebrow="Example 2"
+        title="Controlled state earns its keep when the form drives live feedback."
+        note="Inline feedback, derived submit state, and password guidance all depend on the current draft values. This is where controlled inputs are usually worth it."
+        aside={
+          <span className="stat-chip">
+            submit: {canSubmit ? "enabled" : "blocked"}
+          </span>
+        }
+      />
 
       <form className="forms-live-card" onSubmit={(event) => event.preventDefault()}>
         <label className="field" htmlFor={emailId}>
@@ -256,17 +234,12 @@ function ValidationTimingDemo() {
 
   return (
     <section className="demo-section forms-demo-section">
-      <div className="demo-section-header">
-        <div>
-          <p className="demo-kicker">Example 3</p>
-          <h3>Validation timing changes the tone of the form.</h3>
-          <p className="demo-copy demo-section-note">
-            The same validation rule can feel helpful or hostile depending on
-            whether it fires while typing, after blur, or only at submit time.
-          </p>
-        </div>
-        <span className="stat-chip">mode: {mode}</span>
-      </div>
+      <DemoSectionHeader
+        eyebrow="Example 3"
+        title="Validation timing changes the tone of the form."
+        note="The same validation rule can feel helpful or hostile depending on whether it fires while typing, after blur, or only at submit time."
+        aside={<span className="stat-chip">mode: {mode}</span>}
+      />
 
       <div className="control-row">
         <button className="secondary-button" onClick={() => setMode("change")}>
@@ -344,17 +317,12 @@ function SubmitStateDemo() {
 
   return (
     <section className="demo-section forms-demo-section">
-      <div className="demo-section-header">
-        <div>
-          <p className="demo-kicker">Example 4</p>
-          <h3>Submission state is part of the form design, not a final detail.</h3>
-          <p className="demo-copy demo-section-note">
-            Pending state, retry flow, and preserving user input on error all
-            change whether a form feels reliable.
-          </p>
-        </div>
-        <span className="stat-chip">status: {status}</span>
-      </div>
+      <DemoSectionHeader
+        eyebrow="Example 4"
+        title="Submission state is part of the form design, not a final detail."
+        note="Pending state, retry flow, and preserving user input on error all change whether a form feels reliable."
+        aside={<span className="stat-chip">status: {status}</span>}
+      />
 
       <form className="forms-live-card" onSubmit={handleSubmit}>
         <label className="field">

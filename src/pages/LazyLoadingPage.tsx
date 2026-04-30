@@ -1,5 +1,9 @@
 import { Suspense, lazy, useState } from "react";
 import { PageIntro } from "../components/PageIntro";
+import { LessonHero } from "../components/LessonHero";
+import { GuidanceGrid } from "../components/GuidanceGrid";
+import { RuleCallout } from "../components/RuleCallout";
+import { ComparisonCardHeader } from "../components/ComparisonCardHeader";
 
 const galleryItems = [
   {
@@ -136,62 +140,47 @@ export function LazyLoadingPage() {
         subtitle="This page covers several flavors of deferred loading: code splitting, Suspense boundaries, browser image lazy loading, list virtualization, and preloading on visible intent."
       />
 
-      <section className="lazy-hero" aria-label="Lazy loading mental model">
-        <div className="lazy-hero-copy">
-          <p className="demo-kicker">Mental model</p>
-          <h3>Ship the first screen fast, then load secondary code on demand.</h3>
-          <p className="demo-copy">
-            Lazy loading works best for routes, drawers, inspectors, charts,
-            editors, offscreen media, and large collections that do not need to
-            render all at once. It is a deferral tool, not a default for
-            everything.
-          </p>
-        </div>
+      <LessonHero
+        ariaLabel="Lazy loading mental model"
+        tone="lazy"
+        title="Ship the first screen fast, then load secondary code on demand."
+        copy="Lazy loading works best for routes, drawers, inspectors, charts, editors, offscreen media, and large collections that do not need to render all at once. It is a deferral tool, not a default for everything."
+        prompts={[
+          {
+            label: "Good lazy targets",
+            value: "Rarely opened panels, offscreen media, and huge collections",
+          },
+          {
+            label: "Bad lazy targets",
+            value: "Core page shell and above-the-fold essentials",
+          },
+          {
+            label: "Boundary rule",
+            value: "Suspend the smallest region that can honestly wait",
+          },
+        ]}
+      />
 
-        <div className="lazy-hero-grid">
-          <article className="lazy-hero-prompt">
-            <p className="effects-prompt-label">Good lazy targets</p>
-            <p className="effects-prompt-value">Rarely opened panels, offscreen media, and huge collections</p>
-          </article>
-          <article className="lazy-hero-prompt">
-            <p className="effects-prompt-label">Bad lazy targets</p>
-            <p className="effects-prompt-value">Core page shell and above-the-fold essentials</p>
-          </article>
-          <article className="lazy-hero-prompt">
-            <p className="effects-prompt-label">Boundary rule</p>
-            <p className="effects-prompt-value">Suspend the smallest region that can honestly wait</p>
-          </article>
-        </div>
-      </section>
-
-      <section className="guide-grid" aria-label="Lazy loading guidance">
-        <article className="guide-card">
-          <p className="demo-kicker">Question 1</p>
-          <h3>Does the user need this code for the initial screen?</h3>
-          <p className="demo-copy">
-            If the answer is yes, do not lazy load it. Delaying required UI only
-            replaces one performance problem with another.
-          </p>
-        </article>
-
-        <article className="guide-card">
-          <p className="demo-kicker">Question 2</p>
-          <h3>Can the loading state stay local instead of blanking the page?</h3>
-          <p className="demo-copy">
-            Suspense boundaries are UX boundaries. Place them close to the code
-            that can appear later so the rest of the page remains usable.
-          </p>
-        </article>
-
-        <article className="guide-card">
-          <p className="demo-kicker">Question 3</p>
-          <h3>Can the browser or viewport decide what to defer?</h3>
-          <p className="demo-copy">
-            Images can lazy load when offscreen, and long lists can render only
-            the visible window. Not every deferral needs a manual click.
-          </p>
-        </article>
-      </section>
+      <GuidanceGrid
+        ariaLabel="Lazy loading guidance"
+        items={[
+          {
+            question: "Does the user need this code for the initial screen?",
+            answer:
+              "If the answer is yes, do not lazy load it. Delaying required UI only replaces one performance problem with another.",
+          },
+          {
+            question: "Can the loading state stay local instead of blanking the page?",
+            answer:
+              "Suspense boundaries are UX boundaries. Place them close to the code that can appear later so the rest of the page remains usable.",
+          },
+          {
+            question: "Can the browser or viewport decide what to defer?",
+            answer:
+              "Images can lazy load when offscreen, and long lists can render only the visible window. Not every deferral needs a manual click.",
+          },
+        ]}
+      />
 
       <OnDemandPanelDemo />
       <BoundaryPlacementDemo />
@@ -199,17 +188,16 @@ export function LazyLoadingPage() {
       <VirtualizedListDemo />
       <PreloadIntentDemo />
 
-      <section className="callout-card">
-        <p className="demo-kicker">Rule of thumb</p>
-        <h3>Lazy loading is only a win if the loading boundary feels intentional.</h3>
-        <ul className="guidance-list">
-          <li>Defer code that is optional, infrequent, or clearly secondary.</li>
-          <li>Keep the first meaningful screen eager and responsive.</li>
-          <li>Prefer small fallback regions over whole-page spinners.</li>
-          <li>Let the browser defer offscreen media and let virtualization cap DOM size.</li>
-          <li>Preload on intent when a delayed interaction would feel clumsy.</li>
-        </ul>
-      </section>
+      <RuleCallout
+        title="Lazy loading is only a win if the loading boundary feels intentional."
+        bullets={[
+          "Defer code that is optional, infrequent, or clearly secondary.",
+          "Keep the first meaningful screen eager and responsive.",
+          "Prefer small fallback regions over whole-page spinners.",
+          "Let the browser defer offscreen media and let virtualization cap DOM size.",
+          "Preload on intent when a delayed interaction would feel clumsy.",
+        ]}
+      />
 
       <section className="callout-card">
         <p className="demo-kicker">Other deferred patterns</p>
@@ -258,13 +246,12 @@ function OnDemandPanelDemo() {
         </div>
 
         <div className="comparison-grid">
-          <article className="comparison-card comparison-card-success">
-            <div>
-              <p className="comparison-label comparison-label-success">
-                Good fit
-              </p>
-              <h4>Main workflow stays eager</h4>
-            </div>
+        <article className="comparison-card comparison-card-success">
+          <ComparisonCardHeader
+            label="Good fit"
+            tone="success"
+            title="Main workflow stays eager"
+          />
             <p className="demo-copy">
               Keep the base page available immediately and defer the optional
               inspection tool.
@@ -272,10 +259,7 @@ function OnDemandPanelDemo() {
           </article>
 
           <article className="comparison-card">
-            <div>
-              <p className="comparison-label">Deferred region</p>
-              <h4>Audit details</h4>
-            </div>
+            <ComparisonCardHeader label="Deferred region" title="Audit details" />
             {isOpen ? (
               <Suspense fallback={<LazyFallback label="Loading audit panel code..." />}>
                 <LazyInsightsPanel
@@ -316,12 +300,11 @@ function BoundaryPlacementDemo() {
 
       <div className="comparison-grid">
         <article className="comparison-card comparison-card-caution">
-          <div>
-            <p className="comparison-label comparison-label-caution">
-              Too coarse
-            </p>
-            <h4>Whole card suspends</h4>
-          </div>
+          <ComparisonCardHeader
+            label="Too coarse"
+            tone="caution"
+            title="Whole card suspends"
+          />
           <Suspense fallback={<LazyFallback label="Loading entire sales card..." />}>
             <div className="lazy-boundary-card">
               <label className="field">
@@ -349,12 +332,11 @@ function BoundaryPlacementDemo() {
         </article>
 
         <article className="comparison-card comparison-card-success">
-          <div>
-            <p className="comparison-label comparison-label-success">
-              Scoped better
-            </p>
-            <h4>Only the chart region suspends</h4>
-          </div>
+          <ComparisonCardHeader
+            label="Scoped better"
+            tone="success"
+            title="Only the chart region suspends"
+          />
           <div className="lazy-boundary-card">
             <label className="field">
               Region filter
@@ -434,10 +416,10 @@ function PreloadIntentDemo() {
           </Suspense>
         ) : (
           <article className="comparison-card">
-            <div>
-              <p className="comparison-label">Intent loading</p>
-              <h4>Route hover and button focus are useful signals</h4>
-            </div>
+            <ComparisonCardHeader
+              label="Intent loading"
+              title="Route hover and button focus are useful signals"
+            />
             <p className="demo-copy">
               This pattern works well for menus, drawers, and routes that are
               likely to open next.
@@ -469,12 +451,11 @@ function ImageLazyLoadingDemo() {
 
       <div className="comparison-grid">
         <article className="comparison-card comparison-card-caution">
-          <div>
-            <p className="comparison-label comparison-label-caution">
-              Too eager
-            </p>
-            <h4>Every image competes up front</h4>
-          </div>
+          <ComparisonCardHeader
+            label="Too eager"
+            tone="caution"
+            title="Every image competes up front"
+          />
           <p className="demo-copy">
             Marking an entire gallery eager forces the browser to prioritize
             media that may still be far below the fold.
@@ -482,12 +463,11 @@ function ImageLazyLoadingDemo() {
         </article>
 
         <article className="comparison-card comparison-card-success">
-          <div>
-            <p className="comparison-label comparison-label-success">
-              Better fit
-            </p>
-            <h4>Eager first, lazy later</h4>
-          </div>
+          <ComparisonCardHeader
+            label="Better fit"
+            tone="success"
+            title="Eager first, lazy later"
+          />
           <p className="demo-copy">
             The first useful visuals can stay eager while the rest defer to the
             browser’s offscreen loading heuristics.
@@ -522,7 +502,7 @@ function ImageLazyLoadingDemo() {
 }
 
 function VirtualizedListDemo() {
-  const rowHeight = 68;
+  const rowHeight = 104;
   const viewportHeight = 272;
   const overscan = 3;
   const [scrollTop, setScrollTop] = useState(0);
@@ -552,12 +532,11 @@ function VirtualizedListDemo() {
 
       <div className="comparison-grid">
         <article className="comparison-card comparison-card-caution">
-          <div>
-            <p className="comparison-label comparison-label-caution">
-              Too much work
-            </p>
-            <h4>Render every row</h4>
-          </div>
+          <ComparisonCardHeader
+            label="Too much work"
+            tone="caution"
+            title="Render every row"
+          />
           <p className="demo-copy">
             A full render would mount {virtualRows.length} nodes even though the
             user can only see a handful at once.
@@ -565,12 +544,11 @@ function VirtualizedListDemo() {
         </article>
 
         <article className="comparison-card comparison-card-success">
-          <div>
-            <p className="comparison-label comparison-label-success">
-              Preferred
-            </p>
-            <h4>Render the visible window</h4>
-          </div>
+          <ComparisonCardHeader
+            label="Preferred"
+            tone="success"
+            title="Render the visible window"
+          />
           <p className="demo-copy">
             This list keeps the full scroll height but mounts only the rows near
             the viewport.
@@ -595,7 +573,7 @@ function VirtualizedListDemo() {
               <article
                 key={row.id}
                 className="virtual-row"
-                style={{ height: rowHeight - 8 }}
+                style={{ minHeight: rowHeight - 8 }}
               >
                 <div>
                   <p className="comparison-label">Visible row</p>

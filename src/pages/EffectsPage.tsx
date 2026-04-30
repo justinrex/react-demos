@@ -1,5 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { PageIntro } from "../components/PageIntro";
+import { LessonHero } from "../components/LessonHero";
+import { GuidanceGrid } from "../components/GuidanceGrid";
+import { RuleCallout } from "../components/RuleCallout";
+import { DemoSectionHeader } from "../components/DemoSectionHeader";
+import { ComparisonCardHeader } from "../components/ComparisonCardHeader";
 
 const products = [
   "Apple slices",
@@ -24,75 +29,57 @@ export function EffectsPage() {
         subtitle="Each section compares an effect-heavy pattern against a cleaner version so you can see when an effect is necessary, what it truly depends on, and when cleanup matters."
       />
 
-      <section className="effects-hero" aria-label="Effects mental model">
-        <div className="effects-hero-copy">
-          <p className="demo-kicker">Mental model</p>
-          <h3>Ask whether React is syncing with something outside itself.</h3>
-          <p className="demo-copy">
-            Requests, timers, subscriptions, browser APIs, and DOM integration
-            usually need effects. Filtering data, combining props, and handling
-            a click usually do not.
-          </p>
-        </div>
+      <LessonHero
+        ariaLabel="Effects mental model"
+        tone="effects"
+        title="Ask whether React is syncing with something outside itself."
+        copy="Requests, timers, subscriptions, browser APIs, and DOM integration usually need effects. Filtering data, combining props, and handling a click usually do not."
+        prompts={[
+          {
+            label: "Before writing the effect",
+            value: "What external thing changes here?",
+          },
+          {
+            label: "Before choosing dependencies",
+            value: "Which values truly define the sync?",
+          },
+          {
+            label: "Before shipping it",
+            value: "What stale work needs cleanup?",
+          },
+        ]}
+      />
 
-        <div className="effects-hero-grid">
-          <article className="effects-prompt-card">
-            <p className="effects-prompt-label">Before writing the effect</p>
-            <p className="effects-prompt-value">What external thing changes here?</p>
-          </article>
-          <article className="effects-prompt-card">
-            <p className="effects-prompt-label">Before choosing dependencies</p>
-            <p className="effects-prompt-value">Which values truly define the sync?</p>
-          </article>
-          <article className="effects-prompt-card">
-            <p className="effects-prompt-label">Before shipping it</p>
-            <p className="effects-prompt-value">What stale work needs cleanup?</p>
-          </article>
-        </div>
-      </section>
+      <GuidanceGrid
+        ariaLabel="Effects guidance"
+        items={[
+          {
+            question: "Is there an external system to synchronize with?",
+            answer:
+              "If the work is just filtering, sorting, combining values, or responding to a click, it usually belongs in render logic or the event handler instead of an effect.",
+          },
+          {
+            question: "What values does the synchronization actually depend on?",
+            answer:
+              "Dependency arrays are not optimization knobs. They describe which values the synchronization reads so React can rerun cleanup and setup at the right time.",
+          },
+          {
+            question: "What has to be cleaned up when the render changes?",
+            answer:
+              "Timers, requests, subscriptions, and listeners can outlive the render that created them. If that work can become stale, teardown is part of the effect contract.",
+          },
+        ]}
+      />
 
-      <section className="guide-grid" aria-label="Effects guidance">
-        <article className="guide-card">
-          <p className="demo-kicker">Question 1</p>
-          <h3>Is there an external system to synchronize with?</h3>
-          <p className="demo-copy">
-            If the work is just filtering, sorting, combining values, or
-            responding to a click, it usually belongs in render logic or the
-            event handler instead of an effect.
-          </p>
-        </article>
-
-        <article className="guide-card">
-          <p className="demo-kicker">Question 2</p>
-          <h3>What values does the synchronization actually depend on?</h3>
-          <p className="demo-copy">
-            Dependency arrays are not optimization knobs. They describe which
-            values the synchronization reads so React can rerun cleanup and
-            setup at the right time.
-          </p>
-        </article>
-
-        <article className="guide-card">
-          <p className="demo-kicker">Question 3</p>
-          <h3>What has to be cleaned up when the render changes?</h3>
-          <p className="demo-copy">
-            Timers, requests, subscriptions, and listeners can outlive the
-            render that created them. If that work can become stale, teardown is
-            part of the effect contract.
-          </p>
-        </article>
-      </section>
-
-      <section className="callout-card">
-        <p className="demo-kicker">Rule of thumb</p>
-        <h3>Start by trying to remove the effect.</h3>
-        <ul className="guidance-list">
-          <li>Compute derived values during render instead of mirroring them into state.</li>
-          <li>Keep event-specific logic inside the event handler that caused it.</li>
-          <li>Use effects for requests, timers, subscriptions, and DOM or browser synchronization.</li>
-          <li>Extract a reusable hook only after the underlying effect pattern is already correct.</li>
-        </ul>
-      </section>
+      <RuleCallout
+        title="Start by trying to remove the effect."
+        bullets={[
+          "Compute derived values during render instead of mirroring them into state.",
+          "Keep event-specific logic inside the event handler that caused it.",
+          "Use effects for requests, timers, subscriptions, and DOM or browser synchronization.",
+          "Extract a reusable hook only after the underlying effect pattern is already correct.",
+        ]}
+      />
 
       <DerivedStateDemo />
       <StaleClosureDemo />
@@ -138,20 +125,17 @@ function DerivedStateDemo() {
 
   return (
     <section className="demo-section effects-demo-section">
-      <div className="demo-section-header">
-        <div>
-          <p className="demo-kicker">Example 1</p>
-          <h3>Do not mirror derived values into state with an effect.</h3>
-          <p className="demo-copy demo-section-note">
-            If there is no external system, there is usually no synchronization
-            problem to solve.
-          </p>
-        </div>
-        <div className="stats-row">
-          <span className="stat-chip">renders: {renderCount}</span>
-          <span className="stat-chip">effect syncs: {badRuns.current}</span>
-        </div>
-      </div>
+      <DemoSectionHeader
+        eyebrow="Example 1"
+        title="Do not mirror derived values into state with an effect."
+        note="If there is no external system, there is usually no synchronization problem to solve."
+        aside={
+          <div className="stats-row">
+            <span className="stat-chip">renders: {renderCount}</span>
+            <span className="stat-chip">effect syncs: {badRuns.current}</span>
+          </div>
+        }
+      />
 
       <p className="demo-copy">
         Both panels show the same filtered list. The first one uses an effect
@@ -185,13 +169,12 @@ function DerivedStateDemo() {
 
       <div className="comparison-grid">
         <article className="comparison-card comparison-card-caution">
-          <div className="demo-section-header">
-            <div>
-              <p className="comparison-label comparison-label-caution">Extra effect</p>
-              <h4>Effect + mirrored state</h4>
-            </div>
-            <span className="stat-chip">items: {mirroredItems.length}</span>
-          </div>
+          <ComparisonCardHeader
+            label="Extra effect"
+            tone="caution"
+            title="Effect + mirrored state"
+            aside={<span className="stat-chip">items: {mirroredItems.length}</span>}
+          />
           <p className="demo-copy">
             The effect exists only to recalculate and store something already
             implied by existing state.
@@ -206,13 +189,12 @@ function DerivedStateDemo() {
         </article>
 
         <article className="comparison-card comparison-card-success">
-          <div className="demo-section-header">
-            <div>
-              <p className="comparison-label comparison-label-success">Better fit</p>
-              <h4>Derived during render</h4>
-            </div>
-            <span className="stat-chip">items: {derivedItems.length}</span>
-          </div>
+          <ComparisonCardHeader
+            label="Better fit"
+            tone="success"
+            title="Derived during render"
+            aside={<span className="stat-chip">items: {derivedItems.length}</span>}
+          />
           <p className="demo-copy">
             This version removes the synchronization step because there is no
             external system involved.
@@ -265,19 +247,17 @@ function StaleClosureDemo() {
 
   return (
     <section className="demo-section effects-demo-section">
-      <div className="demo-section-header">
-        <div>
-          <p className="demo-kicker">Example 2</p>
-          <h3>Effects and timers can capture stale values.</h3>
-          <p className="demo-copy demo-section-note">
-            Async callbacks do not automatically see the latest render.
-          </p>
-        </div>
-        <div className="stats-row">
-          <span className="stat-chip">renders: {renderCount}</span>
-          <span className="stat-chip">count: {count}</span>
-        </div>
-      </div>
+      <DemoSectionHeader
+        eyebrow="Example 2"
+        title="Effects and timers can capture stale values."
+        note="Async callbacks do not automatically see the latest render."
+        aside={
+          <div className="stats-row">
+            <span className="stat-chip">renders: {renderCount}</span>
+            <span className="stat-chip">count: {count}</span>
+          </div>
+        }
+      />
 
       <p className="demo-copy">
         Schedule a timeout, then increment the counter before it fires. The bad
@@ -302,28 +282,30 @@ function StaleClosureDemo() {
 
       <div className="comparison-grid">
         <article className="comparison-card comparison-card-caution">
-          <div className="demo-section-header">
-            <div>
-              <p className="comparison-label comparison-label-caution">Buggy path</p>
-              <h4>Captured value</h4>
-            </div>
-            <span className="stat-chip">
-              last result: {badValue === null ? "none" : badValue}
-            </span>
-          </div>
+          <ComparisonCardHeader
+            label="Buggy path"
+            tone="caution"
+            title="Captured value"
+            aside={
+              <span className="stat-chip">
+                last result: {badValue === null ? "none" : badValue}
+              </span>
+            }
+          />
           <LogList entries={badLog.entries} emptyLabel="No timeout scheduled yet." />
         </article>
 
         <article className="comparison-card comparison-card-success">
-          <div className="demo-section-header">
-            <div>
-              <p className="comparison-label comparison-label-success">Safer path</p>
-              <h4>Latest value</h4>
-            </div>
-            <span className="stat-chip">
-              last result: {goodValue === null ? "none" : goodValue}
-            </span>
-          </div>
+          <ComparisonCardHeader
+            label="Safer path"
+            tone="success"
+            title="Latest value"
+            aside={
+              <span className="stat-chip">
+                last result: {goodValue === null ? "none" : goodValue}
+              </span>
+            }
+          />
           <LogList
             entries={goodLog.entries}
             emptyLabel="No timeout scheduled yet."
@@ -387,20 +369,17 @@ function FetchRaceDemo() {
 
   return (
     <section className="demo-section effects-demo-section">
-      <div className="demo-section-header">
-        <div>
-          <p className="demo-kicker">Example 3</p>
-          <h3>Async effects need cleanup when newer work can replace older work.</h3>
-          <p className="demo-copy demo-section-note">
-            The cleanup decides whether an older request is still allowed to
-            update the UI.
-          </p>
-        </div>
-        <div className="stats-row">
-          <span className="stat-chip">renders: {renderCount}</span>
-          <span className="stat-chip">term: {term}</span>
-        </div>
-      </div>
+      <DemoSectionHeader
+        eyebrow="Example 3"
+        title="Async effects need cleanup when newer work can replace older work."
+        note="The cleanup decides whether an older request is still allowed to update the UI."
+        aside={
+          <div className="stats-row">
+            <span className="stat-chip">renders: {renderCount}</span>
+            <span className="stat-chip">term: {term}</span>
+          </div>
+        }
+      />
 
       <p className="demo-copy">
         The button triggers a slow request and then a faster one. Without
@@ -427,29 +406,31 @@ function FetchRaceDemo() {
 
       <div className="comparison-grid">
         <article className="comparison-card comparison-card-caution">
-          <div className="demo-section-header">
-            <div>
-              <p className="comparison-label comparison-label-caution">Race risk</p>
-              <h4>No cleanup</h4>
-            </div>
-            <span className="stat-chip">
-              {badLoading ? "loading..." : "settled"}
-            </span>
-          </div>
+          <ComparisonCardHeader
+            label="Race risk"
+            tone="caution"
+            title="No cleanup"
+            aside={
+              <span className="stat-chip">
+                {badLoading ? "loading..." : "settled"}
+              </span>
+            }
+          />
           <p className="demo-summary">{badResult}</p>
           <LogList entries={badLog.entries} emptyLabel="No requests yet." />
         </article>
 
         <article className="comparison-card comparison-card-success">
-          <div className="demo-section-header">
-            <div>
-              <p className="comparison-label comparison-label-success">Preferred</p>
-              <h4>Cleanup guards stale responses</h4>
-            </div>
-            <span className="stat-chip">
-              {goodLoading ? "loading..." : "settled"}
-            </span>
-          </div>
+          <ComparisonCardHeader
+            label="Preferred"
+            tone="success"
+            title="Cleanup guards stale responses"
+            aside={
+              <span className="stat-chip">
+                {goodLoading ? "loading..." : "settled"}
+              </span>
+            }
+          />
           <p className="demo-summary">{goodResult}</p>
           <LogList entries={goodLog.entries} emptyLabel="No requests yet." />
         </article>
@@ -494,20 +475,17 @@ function DependencyChurnDemo() {
 
   return (
     <section className="demo-section effects-demo-section">
-      <div className="demo-section-header">
-        <div>
-          <p className="demo-kicker">Example 4</p>
-          <h3>Unstable objects and unrelated values can churn an effect.</h3>
-          <p className="demo-copy demo-section-note">
-            The best dependency fix is often to redraw the effect boundary
-            around the actual synchronization concern.
-          </p>
-        </div>
-        <div className="stats-row">
-          <span className="stat-chip">renders: {renderCount}</span>
-          <span className="stat-chip">theme: {theme}</span>
-        </div>
-      </div>
+      <DemoSectionHeader
+        eyebrow="Example 4"
+        title="Unstable objects and unrelated values can churn an effect."
+        note="The best dependency fix is often to redraw the effect boundary around the actual synchronization concern."
+        aside={
+          <div className="stats-row">
+            <span className="stat-chip">renders: {renderCount}</span>
+            <span className="stat-chip">theme: {theme}</span>
+          </div>
+        }
+      />
 
       <p className="demo-copy">
         The first effect treats theme as part of the connection contract, so a
@@ -537,28 +515,30 @@ function DependencyChurnDemo() {
 
       <div className="comparison-grid">
         <article className="comparison-card comparison-card-caution">
-          <div className="demo-section-header">
-            <div>
-              <p className="comparison-label comparison-label-caution">Too broad</p>
-              <h4>Churned dependency graph</h4>
-            </div>
-            <span className="stat-chip">
-              connections: {badConnections.current}
-            </span>
-          </div>
+          <ComparisonCardHeader
+            label="Too broad"
+            tone="caution"
+            title="Churned dependency graph"
+            aside={
+              <span className="stat-chip">
+                connections: {badConnections.current}
+              </span>
+            }
+          />
           <LogList entries={badLog.entries} emptyLabel="No connections yet." />
         </article>
 
         <article className="comparison-card comparison-card-success">
-          <div className="demo-section-header">
-            <div>
-              <p className="comparison-label comparison-label-success">Scoped better</p>
-              <h4>Scoped to the real dependency</h4>
-            </div>
-            <span className="stat-chip">
-              connections: {goodConnections.current}
-            </span>
-          </div>
+          <ComparisonCardHeader
+            label="Scoped better"
+            tone="success"
+            title="Scoped to the real dependency"
+            aside={
+              <span className="stat-chip">
+                connections: {goodConnections.current}
+              </span>
+            }
+          />
           <LogList entries={goodLog.entries} emptyLabel="No connections yet." />
         </article>
       </div>

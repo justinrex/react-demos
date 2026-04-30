@@ -14,6 +14,13 @@ Shared project notes for `react-demos`.
 
 ## Recent changes
 
+- Added a reuse pass across the teaching pages:
+  - extracted a shared `LessonHero` component for the repeated mental-model hero pattern
+  - extracted a shared `GuidanceGrid` for the three-question intro sections
+  - extracted a shared `RuleCallout` for the repeated rule-of-thumb blocks
+  - extracted a shared `DemoSectionHeader` for repeated example-section intros with notes and stat chips
+  - extracted a shared `ComparisonCardHeader` for repeated comparison-card labels/titles/aside chips
+  - consolidated the matching hero CSS into shared lesson-hero styles with per-page tone modifiers
 - Updated the app shell to better match the demos:
   - route pages now lazy load
   - nav links preload page code on hover/focus intent

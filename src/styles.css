@@ -354,29 +354,29 @@ code {
   gap: 1.25rem;
 }
 
-.effects-hero {
+.lesson-hero {
   display: grid;
-  grid-template-columns: minmax(0, 1.2fr) minmax(0, 0.8fr);
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
   gap: 1rem;
   padding: 1.5rem;
-  border: 1px solid rgba(226, 184, 106, 0.22);
   border-radius: 1.7rem;
+}
+
+.lesson-hero-effects {
+  border: 1px solid rgba(226, 184, 106, 0.22);
   background:
     linear-gradient(145deg, rgba(226, 184, 106, 0.12), rgba(255, 255, 255, 0.03)),
     rgba(255, 255, 255, 0.04);
 }
 
-.effects-hero-grid {
+.lesson-hero-copy {
+  align-self: start;
+}
+
+.lesson-hero-grid {
   display: grid;
   gap: 0.85rem;
   align-content: start;
-}
-
-.effects-prompt-card {
-  padding: 1rem 1.1rem;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 1.15rem;
-  background: rgba(8, 9, 11, 0.3);
 }
 
 .effects-prompt-label,
@@ -443,19 +443,14 @@ code {
   gap: 1.25rem;
 }
 
-.css-hero {
-  display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
-  gap: 1rem;
-  padding: 1.5rem;
+.lesson-hero-css {
   border: 1px solid rgba(225, 147, 120, 0.24);
-  border-radius: 1.7rem;
   background:
     linear-gradient(145deg, rgba(214, 126, 86, 0.16), rgba(255, 255, 255, 0.03)),
     rgba(255, 255, 255, 0.04);
 }
 
-.css-hero-grid,
+.lesson-hero-grid,
 .css-consumption-stack,
 .css-variable-preview,
 .theme-swatch-grid {
@@ -463,15 +458,7 @@ code {
   gap: 1rem;
 }
 
-.css-hero-copy {
-  align-self: start;
-}
-
-.css-hero-grid {
-  align-content: start;
-}
-
-.css-hero-prompt,
+.lesson-hero-prompt,
 .theme-swatch,
 .css-consumer-card {
   padding: 1rem 1.1rem;
@@ -697,30 +684,20 @@ code {
   gap: 1.25rem;
 }
 
-.a11y-hero {
-  display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
-  gap: 1rem;
-  padding: 1.5rem;
+.lesson-hero-a11y {
   border: 1px solid rgba(120, 186, 164, 0.24);
-  border-radius: 1.7rem;
   background:
     linear-gradient(145deg, rgba(100, 169, 145, 0.16), rgba(255, 255, 255, 0.03)),
     rgba(255, 255, 255, 0.04);
 }
 
-.a11y-hero-grid,
 .a11y-structure-preview,
 .a11y-form {
   display: grid;
   gap: 1rem;
 }
 
-.a11y-hero-grid {
-  align-content: start;
-}
-
-.a11y-hero-prompt,
+.lesson-hero-prompt,
 .a11y-region,
 .a11y-fieldset,
 .a11y-article-card {
@@ -793,37 +770,27 @@ code {
   gap: 1.25rem;
 }
 
-.forms-hero {
-  display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
-  gap: 1rem;
-  padding: 1.5rem;
+.lesson-hero-forms {
   border: 1px solid rgba(178, 146, 221, 0.24);
-  border-radius: 1.7rem;
   background:
     linear-gradient(145deg, rgba(161, 121, 217, 0.16), rgba(255, 255, 255, 0.03)),
     rgba(255, 255, 255, 0.04);
 }
 
-.forms-hero-grid,
 .forms-stack,
 .forms-live-card {
   display: grid;
   gap: 1rem;
 }
 
-.forms-hero-grid {
-  align-content: start;
-}
-
-.forms-hero-prompt,
+.lesson-hero-prompt,
 .forms-live-card,
 .forms-live-chip {
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(8, 9, 11, 0.3);
 }
 
-.forms-hero-prompt,
+.lesson-hero-prompt,
 .forms-live-card {
   padding: 1rem 1.1rem;
   border-radius: 1.15rem;
@@ -856,41 +823,17 @@ code {
   gap: 1.25rem;
 }
 
-.lazy-hero {
-  display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
-  gap: 1rem;
-  padding: 1.5rem;
+.lesson-hero-lazy {
   border: 1px solid rgba(137, 177, 216, 0.24);
-  border-radius: 1.7rem;
   background:
     linear-gradient(145deg, rgba(109, 156, 201, 0.16), rgba(255, 255, 255, 0.03)),
     rgba(255, 255, 255, 0.04);
 }
 
-.lazy-hero-grid,
 .lazy-boundary-card,
 .lazy-frame {
   display: grid;
   gap: 1rem;
-}
-
-.lazy-hero-grid {
-  align-content: start;
-}
-
-.effects-hero-copy,
-.lazy-hero-copy,
-.a11y-hero-copy,
-.forms-hero-copy {
-  align-self: start;
-}
-
-.lazy-hero-prompt {
-  padding: 1rem 1.1rem;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 1.15rem;
-  background: rgba(8, 9, 11, 0.3);
 }
 
 .lazy-demo-section {
@@ -1059,23 +1002,7 @@ code {
     flex-direction: column;
   }
 
-  .effects-hero {
-    grid-template-columns: 1fr;
-  }
-
-  .css-hero {
-    grid-template-columns: 1fr;
-  }
-
-  .a11y-hero {
-    grid-template-columns: 1fr;
-  }
-
-  .forms-hero {
-    grid-template-columns: 1fr;
-  }
-
-  .lazy-hero {
+  .lesson-hero {
     grid-template-columns: 1fr;
   }
 
