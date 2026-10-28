@@ -243,6 +243,7 @@ function CheapComputationDemo() {
   const renderCount = useRenderCount();
   const computationCount = useRef(0);
 
+  // eslint-disable-next-line react-hooks/refs -- Demo-only instrumentation avoids scheduling extra renders.
   computationCount.current += 1;
 
   const visibleSnacks = snackIdeas.filter((item) =>
@@ -259,6 +260,7 @@ function CheapComputationDemo() {
         <div className="stats-row">
           <span className="stat-chip">renders: {renderCount}</span>
           <span className="stat-chip">
+            {/* eslint-disable-next-line react-hooks/refs -- Demo-only instrumentation avoids scheduling extra renders. */}
             computations: {computationCount.current}
           </span>
         </div>
@@ -306,8 +308,10 @@ function ExpensiveComputationDemo() {
   const plainRuns = useRef(0);
   const memoRuns = useRef(0);
 
+  // eslint-disable-next-line react-hooks/refs -- Demo-only instrumentation avoids scheduling extra renders.
   const plainMatches = buildExpensiveMatches(query, sortByGroup, plainRuns);
   const memoMatches = useMemo(
+    // eslint-disable-next-line react-hooks/refs -- Demo-only instrumentation avoids scheduling extra renders.
     () => buildExpensiveMatches(query, sortByGroup, memoRuns),
     [query, sortByGroup],
   );
@@ -363,6 +367,7 @@ function ExpensiveComputationDemo() {
           <div className="demo-section-header">
             <h4>Without useMemo</h4>
             <span className="stat-chip">
+              {/* eslint-disable-next-line react-hooks/refs -- Demo-only instrumentation avoids scheduling extra renders. */}
               recomputations: {plainRuns.current}
             </span>
           </div>
@@ -376,6 +381,7 @@ function ExpensiveComputationDemo() {
           <div className="demo-section-header">
             <h4>With useMemo</h4>
             <span className="stat-chip">
+              {/* eslint-disable-next-line react-hooks/refs -- Demo-only instrumentation avoids scheduling extra renders. */}
               recomputations: {memoRuns.current}
             </span>
           </div>
@@ -403,9 +409,9 @@ function StablePropsDemo() {
   const stableDetails = useMemo(
     () => ({
       emphasis: "Stable object prop.",
-      note: "This child can skip unrelated parent updates because the object prop is reused until the draft changes.",
+      note: "This child can skip unrelated parent updates because the same object prop is reused across renders.",
     }),
-    [draft],
+    [],
   );
 
   const unstableSelect = () => {
@@ -478,6 +484,7 @@ function EffectDependencyDemo() {
   const unstableEffectRuns = useRef(0);
   const stableEffectRuns = useRef(0);
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps -- The unstable function is deliberate: this panel demonstrates dependency churn.
   const unstableCreateOptions = () => ({
     roomId,
     reconnect: true,
@@ -545,6 +552,7 @@ function EffectDependencyDemo() {
           <div className="demo-section-header">
             <h4>Without useCallback</h4>
             <span className="stat-chip">
+              {/* eslint-disable-next-line react-hooks/refs -- Demo-only instrumentation avoids scheduling extra renders. */}
               effect runs: {unstableEffectRuns.current}
             </span>
           </div>
@@ -558,6 +566,7 @@ function EffectDependencyDemo() {
           <div className="demo-section-header">
             <h4>With useCallback</h4>
             <span className="stat-chip">
+              {/* eslint-disable-next-line react-hooks/refs -- Demo-only instrumentation avoids scheduling extra renders. */}
               effect runs: {stableEffectRuns.current}
             </span>
           </div>
@@ -573,7 +582,9 @@ function EffectDependencyDemo() {
 
 function useRenderCount() {
   const renderCount = useRef(0);
+  // eslint-disable-next-line react-hooks/refs -- Demo-only instrumentation avoids scheduling extra renders.
   renderCount.current += 1;
+  // eslint-disable-next-line react-hooks/refs -- Demo-only instrumentation avoids scheduling extra renders.
   return renderCount.current;
 }
 

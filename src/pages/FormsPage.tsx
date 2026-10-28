@@ -81,6 +81,7 @@ function ControlledVsUncontrolledDemo() {
   const [submittedQuery, setSubmittedQuery] = useState("none yet");
   const [draft, setDraft] = useState("starter");
   const renderCount = useRef(0);
+  // eslint-disable-next-line react-hooks/refs -- Demo-only instrumentation avoids scheduling extra renders.
   renderCount.current += 1;
 
   return (
@@ -91,6 +92,7 @@ function ControlledVsUncontrolledDemo() {
         note="The search form only reads the input on submit. The filter chip UI reacts immediately to the current value, so it benefits from a controlled field."
         aside={
           <span className="stat-chip">
+            {/* eslint-disable-next-line react-hooks/refs -- Demo-only instrumentation avoids scheduling extra renders. */}
             controlled renders: {renderCount.current}
           </span>
         }

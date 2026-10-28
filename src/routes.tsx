@@ -1,6 +1,7 @@
 import { lazy, Suspense } from "react";
 import type { ComponentType, ReactNode } from "react";
 import { Shell } from "./shell";
+import { RouteFallback } from "./components/RouteFallback";
 import { Navigate } from "react-router-dom";
 type DemoPage = {
   slug: string;
@@ -39,20 +40,6 @@ function createLazyPage<TModule extends Record<string, unknown>>(
       </Suspense>
     ),
   };
-}
-
-function RouteFallback() {
-  return (
-    <section className="page">
-      <header className="page-intro">
-        <p className="eyebrow">Loading demo</p>
-        <h2>Preparing the page...</h2>
-        <p className="page-intro-copy">
-          This route is being lazy loaded so the app shell can stay lighter up front.
-        </p>
-      </header>
-    </section>
-  );
 }
 
 const memoizationPage = createLazyPage(

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { PageIntro } from "../components/PageIntro";
 import { LessonHero } from "../components/LessonHero";
 import { GuidanceGrid } from "../components/GuidanceGrid";
@@ -116,6 +116,7 @@ function DerivedStateDemo() {
       .filter((item) => item.toLowerCase().includes(query.toLowerCase()))
       .filter((item) => !showShortNames || item.length <= 12);
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- This teaching example deliberately uses effect-driven state to expose its tradeoffs.
     setMirroredItems(nextItems);
   }, [query, showShortNames]);
 
@@ -132,6 +133,7 @@ function DerivedStateDemo() {
         aside={
           <div className="stats-row">
             <span className="stat-chip">renders: {renderCount}</span>
+            {/* eslint-disable-next-line react-hooks/refs -- Demo-only instrumentation avoids scheduling extra renders. */}
             <span className="stat-chip">effect syncs: {badRuns.current}</span>
           </div>
         }
@@ -217,8 +219,8 @@ function StaleClosureDemo() {
   const [badValue, setBadValue] = useState<number | null>(null);
   const [goodValue, setGoodValue] = useState<number | null>(null);
   const renderCount = useRenderCount();
-  const badLog = useEventLog();
-  const goodLog = useEventLog();
+  const { entries: badEntries, push: pushBadLog } = useEventLog();
+  const { entries: goodEntries, push: pushGoodLog } = useEventLog();
   const latestCount = useRef(count);
 
   useEffect(() => {
@@ -227,21 +229,21 @@ function StaleClosureDemo() {
 
   const scheduleBadAlert = () => {
     const capturedCount = count;
-    badLog.push(`scheduled timeout with count ${capturedCount}`);
+    pushBadLog(`scheduled timeout with count ${capturedCount}`);
 
     window.setTimeout(() => {
       setBadValue(capturedCount);
-      badLog.push(`timeout read stale count ${capturedCount}`);
+      pushBadLog(`timeout read stale count ${capturedCount}`);
     }, 1200);
   };
 
   const scheduleGoodAlert = () => {
-    goodLog.push(`scheduled timeout with count ${count}`);
+    pushGoodLog(`scheduled timeout with count ${count}`);
 
     window.setTimeout(() => {
       const nextValue = latestCount.current;
       setGoodValue(nextValue);
-      goodLog.push(`timeout read latest count ${nextValue}`);
+      pushGoodLog(`timeout read latest count ${nextValue}`);
     }, 1200);
   };
 
@@ -292,7 +294,7 @@ function StaleClosureDemo() {
               </span>
             }
           />
-          <LogList entries={badLog.entries} emptyLabel="No timeout scheduled yet." />
+          <LogList entries={badEntries} emptyLabel="No timeout scheduled yet." />
         </article>
 
         <article className="comparison-card comparison-card-success">
@@ -307,7 +309,7 @@ function StaleClosureDemo() {
             }
           />
           <LogList
-            entries={goodLog.entries}
+            entries={goodEntries}
             emptyLabel="No timeout scheduled yet."
           />
         </article>
@@ -323,42 +325,44 @@ function FetchRaceDemo() {
   const [badLoading, setBadLoading] = useState(false);
   const [goodLoading, setGoodLoading] = useState(false);
   const renderCount = useRenderCount();
-  const badLog = useEventLog();
-  const goodLog = useEventLog();
+  const { entries: badEntries, push: pushBadLog } = useEventLog();
+  const { entries: goodEntries, push: pushGoodLog } = useEventLog();
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- This teaching example deliberately uses effect-driven state to expose its tradeoffs.
     setBadLoading(true);
-    badLog.push(`request started for "${term}"`);
+    pushBadLog(`request started for "${term}"`);
 
     fakeSearch(term).then((result) => {
       setBadLoading(false);
       setBadResult(result);
-      badLog.push(`response committed for "${term}"`);
+      pushBadLog(`response committed for "${term}"`);
     });
-  }, [term]);
+  }, [term, pushBadLog]);
 
   useEffect(() => {
     let ignore = false;
 
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- This teaching example deliberately uses effect-driven state to expose its tradeoffs.
     setGoodLoading(true);
-    goodLog.push(`request started for "${term}"`);
+    pushGoodLog(`request started for "${term}"`);
 
     fakeSearch(term).then((result) => {
       if (ignore) {
-        goodLog.push(`response ignored for "${term}"`);
+        pushGoodLog(`response ignored for "${term}"`);
         return;
       }
 
       setGoodLoading(false);
       setGoodResult(result);
-      goodLog.push(`response committed for "${term}"`);
+      pushGoodLog(`response committed for "${term}"`);
     });
 
     return () => {
       ignore = true;
-      goodLog.push(`cleanup ran for "${term}"`);
+      pushGoodLog(`cleanup ran for "${term}"`);
     };
-  }, [term]);
+  }, [term, pushGoodLog]);
 
   const runRace = () => {
     setTerm("slow tickets");
@@ -417,7 +421,7 @@ function FetchRaceDemo() {
             }
           />
           <p className="demo-summary">{badResult}</p>
-          <LogList entries={badLog.entries} emptyLabel="No requests yet." />
+          <LogList entries={badEntries} emptyLabel="No requests yet." />
         </article>
 
         <article className="comparison-card comparison-card-success">
@@ -432,7 +436,7 @@ function FetchRaceDemo() {
             }
           />
           <p className="demo-summary">{goodResult}</p>
-          <LogList entries={goodLog.entries} emptyLabel="No requests yet." />
+          <LogList entries={goodEntries} emptyLabel="No requests yet." />
         </article>
       </div>
     </section>
@@ -443,19 +447,19 @@ function DependencyChurnDemo() {
   const [roomId, setRoomId] = useState("design-review");
   const [theme, setTheme] = useState("sand");
   const renderCount = useRenderCount();
-  const badLog = useEventLog();
-  const goodLog = useEventLog();
+  const { entries: badEntries, push: pushBadLog } = useEventLog();
+  const { entries: goodEntries, push: pushGoodLog } = useEventLog();
   const badConnections = useRef(0);
   const goodConnections = useRef(0);
 
   useEffect(() => {
     badConnections.current += 1;
-    badLog.push(`connect ${badConnections.current} with theme ${theme}`);
+    pushBadLog(`connect ${badConnections.current} with theme ${theme}`);
 
     return () => {
-      badLog.push(`disconnect room ${roomId}`);
+      pushBadLog(`disconnect room ${roomId}`);
     };
-  }, [theme, roomId]);
+  }, [theme, roomId, pushBadLog]);
 
   useEffect(() => {
     goodConnections.current += 1;
@@ -464,14 +468,14 @@ function DependencyChurnDemo() {
       reconnect: true,
     };
 
-    goodLog.push(
+    pushGoodLog(
       `connect ${goodConnections.current} for ${connectionOptions.roomId}`,
     );
 
     return () => {
-      goodLog.push(`disconnect room ${connectionOptions.roomId}`);
+      pushGoodLog(`disconnect room ${connectionOptions.roomId}`);
     };
-  }, [roomId]);
+  }, [roomId, pushGoodLog]);
 
   return (
     <section className="demo-section effects-demo-section">
@@ -521,11 +525,12 @@ function DependencyChurnDemo() {
             title="Churned dependency graph"
             aside={
               <span className="stat-chip">
+                {/* eslint-disable-next-line react-hooks/refs -- Demo-only instrumentation avoids scheduling extra renders. */}
                 connections: {badConnections.current}
               </span>
             }
           />
-          <LogList entries={badLog.entries} emptyLabel="No connections yet." />
+          <LogList entries={badEntries} emptyLabel="No connections yet." />
         </article>
 
         <article className="comparison-card comparison-card-success">
@@ -535,11 +540,12 @@ function DependencyChurnDemo() {
             title="Scoped to the real dependency"
             aside={
               <span className="stat-chip">
+                {/* eslint-disable-next-line react-hooks/refs -- Demo-only instrumentation avoids scheduling extra renders. */}
                 connections: {goodConnections.current}
               </span>
             }
           />
-          <LogList entries={goodLog.entries} emptyLabel="No connections yet." />
+          <LogList entries={goodEntries} emptyLabel="No connections yet." />
         </article>
       </div>
     </section>
@@ -580,7 +586,9 @@ function fakeSearch(term: string) {
 
 function useRenderCount() {
   const renderCount = useRef(0);
+  // eslint-disable-next-line react-hooks/refs -- Demo-only instrumentation avoids scheduling extra renders.
   renderCount.current += 1;
+  // eslint-disable-next-line react-hooks/refs -- Demo-only instrumentation avoids scheduling extra renders.
   return renderCount.current;
 }
 
@@ -588,15 +596,10 @@ function useEventLog() {
   const nextId = useRef(0);
   const [entries, setEntries] = useState<LogEntry[]>([]);
 
-  return {
-    entries,
-    push(text: string) {
-      nextId.current += 1;
+  const push = useCallback((text: string) => {
+    const id = ++nextId.current;
+    setEntries((current) => [{ id, text }, ...current.slice(0, 4)]);
+  }, []);
 
-      setEntries((current) => [
-        { id: nextId.current, text },
-        ...current.slice(0, 4),
-      ]);
-    },
-  };
+  return { entries, push };
 }
